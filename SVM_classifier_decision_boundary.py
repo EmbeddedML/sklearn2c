@@ -9,7 +9,6 @@ model = SVC()
 label = np.array([0] * 100 + [1] * 100)
 model.fit(X, label)
 
-
 xval, yval = np.meshgrid(np.arange(-10, 10, 0.05), np.arange(-10, 10, 0.05))
 
 Z = model.decision_function(np.c_[xval.ravel(), yval.ravel()])
