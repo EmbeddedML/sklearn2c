@@ -1,3 +1,4 @@
+import os.path as osp
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.model_selection import train_test_split
@@ -19,5 +20,4 @@ labels = [LABEL_TO_IDX[label] for label in labels]
 X_train, X_test, y_train, y_test = train_test_split(samples, labels, test_size=0.5, random_state=0)
 fitted_reg = reg.fit(X_train, y_train)
 PolyRegWriter = PolynomialRegExporter(fitted_reg)
-PolyRegWriter.export2file('poly_reg_config.c')
-asd = 0
+PolyRegWriter.export2file(osp.join('polynomial_regression', 'Inc', 'poly_reg_config.c'))
