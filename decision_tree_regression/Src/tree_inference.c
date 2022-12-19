@@ -1,12 +1,12 @@
 #include <stdio.h>
 #include "tree_inference.h"
 
-int tree_inference(int input[])
+float tree_inference(float input[])
 {
     int idx = 0; // Root Node
     while (idx >= 0)
     {
-        int feature_val = input[SPLIT_FEATURE[idx]];
+        float feature_val = input[SPLIT_FEATURE[idx]];
         if (SPLIT_FEATURE[idx] < 0)
             return VALUES[idx];
         if (feature_val < THRESHOLDS[idx])
