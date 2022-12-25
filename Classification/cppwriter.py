@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 import numpy as np
 import os
 
-
 def np2str(arr):
     str_arr = np.array2string(arr, separator= ",")
     str_arr = str_arr.replace("[", "{").replace("]","}")

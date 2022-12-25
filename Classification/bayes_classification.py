@@ -4,7 +4,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.naive_bayes import GaussianNB
 from sklearn.covariance import empirical_covariance
 from data_generator import generate_classes
-from cppwriter import BayesExporter
+from sklearn2c.cppwriter import BayesExporter
 
 X, y = generate_classes(False)
 

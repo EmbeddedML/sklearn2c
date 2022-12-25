@@ -2,7 +2,7 @@ import os.path as osp
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.model_selection import train_test_split
-from cppwriter import PolynomialRegExporter
+from sklearn2c.cppwriter import PolynomialRegExporter
 from reg_data_generator import generate_regression_data
 
 X, y, coeff1 = generate_regression_data(100, 2, 100, rs= 9)
