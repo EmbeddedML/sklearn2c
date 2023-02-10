@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "knn_config.h"
+#include "knn_inference.h"
 
 float euclid_distance(float sample[], float target[])
 {
