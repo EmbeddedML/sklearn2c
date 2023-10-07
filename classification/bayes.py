@@ -26,10 +26,23 @@ class BayesClassifier(BaseClassifier):
             self.inv_covs.append(inv_cov)
             self.det_sqrs.append(sqrt_det)
         if save:
-            joblib.dump(self.clf, 'bayes_classifier.joblib') 
+            joblib.dump(self, 'bayes_classifier.joblib') 
 
-    def inference(self, test_samples, test_labels = None):
-        self.result = super().inference(test_samples, test_labels)
+    def inference(self, x_T, test_labels = None):
+        self.result = super().inference(x_T, test_labels)
+        x = np.transpose(x_T)
+        discr = np.zeros(len(self.clf.classes_))
+        for lbl in range(len(self.clf.classes_)):
+            mu = np.expand_dims(self.clf.theta_[lbl], 1)
+            sigma = self.inv_covs[lbl]
+            xt_sigma = np.matmul(x_T, sigma)
+            xt_sigma_x = np.matmul(xt_sigma, x) * (-1/2)
+            sigma_mu = np.matmul(sigma, mu)
+            sigma_mu_x = np.matmul(np.transpose(sigma_mu), x) 
+            mu_sigma_mu = np.matmul(np.transpose(mu), sigma_mu) * (-1/2)
+            log_det = np.log(self.det_sqrs[lbl]) * (-1/2)
+            prior = np.log(self.clf.class_prior_[lbl])
+            discr[lbl] = xt_sigma_x + sigma_mu_x + mu_sigma_mu + log_det + prior
         
     def export(self, filename = 'bayes_config'):
         BayesWriter = BayesExporter(self.clf, self.inv_covs, self.det_sqrs)

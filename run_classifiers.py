@@ -17,7 +17,7 @@ train_samples, test_samples, train_labels, test_labels = train_test_split(sample
 
 bayesian = BayesClassifier()
 bayesian.train(train_samples, train_labels)
-bayesian.inference(test_samples)
+bayesian.inference(test_samples[0:1])
 bayesian.export()
 
 dtc = DTClassifier()
