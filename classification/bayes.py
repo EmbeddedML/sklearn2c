@@ -43,6 +43,7 @@ class BayesClassifier(BaseClassifier):
             log_det = np.log(self.det_sqrs[lbl]) * (-1/2)
             prior = np.log(self.clf.class_prior_[lbl])
             discr[lbl] = xt_sigma_x + sigma_mu_x + mu_sigma_mu + log_det + prior
+        return discr
         
     def export(self, filename = 'bayes_config'):
         BayesWriter = BayesExporter(self.clf, self.inv_covs, self.det_sqrs)

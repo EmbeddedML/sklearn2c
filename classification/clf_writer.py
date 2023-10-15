@@ -33,7 +33,7 @@ class GenericExporter:
 
     def create_header(self):
         self.header_str += f'#ifndef {self.filename.upper()}_H_INCLUDED\n'
-        self.header_str += '#define BAYES_CONFIG_H_INCLUDED\n'
+        self.header_str += f'#define {self.filename.upper()}_H_INCLUDED\n'
     
     def create_source(self):
         self.source_str += f'#include "{self.filename}.h"\n'

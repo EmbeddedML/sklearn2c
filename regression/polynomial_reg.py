@@ -1,17 +1,27 @@
-import os.path as osp
-from sklearn.linear_model import LinearRegression
+import joblib
 from sklearn.preprocessing import PolynomialFeatures
-from sklearn.model_selection import train_test_split
-from sklearn2c.cppwriter import PolynomialRegExporter
-from reg_data_generator import generate_regression_data
+from sklearn.linear_model import LinearRegression
 
-X, y, coeff1 = generate_regression_data(100, 2, 100, rs= 9)
+from .base_regressor import BaseRegressor
+from .reg_writer import PolynomialRegExporter
 
-linear_reg = LinearRegression()
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.5, random_state=0)
-poly = PolynomialFeatures(3) # [1, x1,x2, x1^2, ]
-X_train = poly.fit_transform(X_train)
-X_test = poly.fit_transform(X_test)
-fitted_reg = linear_reg.fit(X_train, y_train)
-PolyRegWriter = PolynomialRegExporter(fitted_reg)
-PolyRegWriter.export2file(osp.join('polynomial_regression', 'Inc', 'poly_reg_config.c'))
+class PolynomialRegressor(BaseRegressor):
+    def __init__(self, deg, **kwargs):
+       self.poly_features = PolynomialFeatures(degree = deg, **kwargs)
+       self.reg = LinearRegression(**kwargs)
+       super().__init__(self.reg)
+
+    def train(self, train_samples, train_labels, save = False):
+        train_samples = self.poly_features.fit_transform(train_samples)
+        self.reg = super().train(train_samples, train_labels)
+        if save:
+            joblib.dump(self, 'poly_regression.joblib') 
+
+    def inference(self, test_samples, test_labels = None):
+        test_samples = self.poly_features.fit_transform(test_samples)
+        result = super().inference(test_samples, test_labels)
+        return result
+
+    def export(self, filename = 'poly_regression'):
+        PolyWriter = PolynomialRegExporter(self.reg)
+        PolyWriter.export(filename)
