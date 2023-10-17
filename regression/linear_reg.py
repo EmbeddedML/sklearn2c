@@ -18,6 +18,6 @@ class LinearRegressor(BaseRegressor):
         result = super().inference(test_samples, test_labels)
         return result
 
-    def export(self, filename = 'linear_regression'):
+    def export(self, filename = 'linReg_config'):
         LinearRegWriter = PolynomialRegExporter(self.reg)
         LinearRegWriter.export(filename)

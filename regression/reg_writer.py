@@ -1,14 +1,31 @@
-from abc import ABC, abstractmethod
 import numpy as np
-import os
 
 def np2str(arr):
     str_arr = np.array2string(arr, separator= ",")
     str_arr = str_arr.replace("[", "{").replace("]","}")
+    str_arr = str_arr.replace("'","\"")
     # str_arr = str_arr.replace("\n", ", ")
     # str_arr = str_arr.replace("  ", ", ")
     # str_arr = str_arr.replace(" ", ", ")
     return str_arr
+
+def feats2str(arr):
+    new_arr = np.array([""] * len(arr), dtype=object)
+    for idx, elem in enumerate(arr):
+        inter_feats = elem.split(" ")
+        for intra_feats in inter_feats:
+            power = intra_feats.split("^")
+            feat_num = power[0].replace("x", "")
+            if len(power) == 2:
+                new_arr[idx] = "*".join(int(power[1]) * feat_num)
+            else:
+                new_arr[idx] = feat_num
+
+    str_arr = np.array2string(new_arr, separator= ",")
+    str_arr = str_arr.replace("[", "{").replace("]","}")
+    str_arr = str_arr.replace("'","\"")
+    return str_arr
+
 
 class GenericExporter:
     def __init__(self) -> None:
@@ -33,23 +50,38 @@ class GenericExporter:
         self.source_str += f'#include "{self.filename}.h"\n'
 
 class PolynomialRegExporter(GenericExporter):
-    def __init__(self, regressor) -> None:
+    def __init__(self, regressor, feature_names = None) -> None:
         super().__init__()
         self.regressor = regressor
-        self.coeff_str = np2str(self.regressor.coef_)
+        coef_start = 0
         self.offset = self.regressor.intercept_ if self.regressor.intercept_ else 0
+        if feature_names is not None:
+            coef_start = 1
+            self.feature_names = feature_names[1:]
+        else:
+            self.feature_names = None
+        
+        self.coeff_str = np2str(self.regressor.coef_[coef_start:])
 
     def create_header(self):
         super().create_header()
-        self.header_str += f"#define NUM_FEATURES {self.regressor.n_features_in_}\n"
+        num_features = self.regressor.n_features_in_
+        if self.feature_names is not None:
+            num_features = self.regressor.n_features_in_ - 1
+
+        self.header_str += f"#define NUM_FEATURES {num_features}\n"
         self.header_str += "extern const float COEFFS[NUM_FEATURES];\n"
         self.header_str += "extern const float OFFSET;\n"
+        if self.feature_names is not None:
+            self.header_str += "extern char *feature_names[NUM_FEATURES];\n"
         self.header_str += "#endif"
 
     def create_source(self):
         super().create_source()
-        self.source_str += f"float COEFFS[NUM_FEATURES] = {self.coeff_str};\n"
-        self.source_str += f"float OFFSET = {self.offset};\n"
+        self.source_str += f"const float COEFFS[NUM_FEATURES] = {self.coeff_str};\n"
+        self.source_str += f"const float OFFSET = {self.offset};\n"
+        if self.feature_names is not None:
+            self.source_str += f"char *feature_names[NUM_FEATURES] = {feats2str(self.feature_names)};\n"
 
 class DTRegressorExporter(GenericExporter):
     def __init__(self, regressor) -> None:

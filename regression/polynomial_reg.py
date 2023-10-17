@@ -22,6 +22,7 @@ class PolynomialRegressor(BaseRegressor):
         result = super().inference(test_samples, test_labels)
         return result
 
-    def export(self, filename = 'poly_regression'):
-        PolyWriter = PolynomialRegExporter(self.reg)
+    def export(self, filename = 'polyReg_config'):
+        feature_names = self.poly_features.get_feature_names_out()
+        PolyWriter = PolynomialRegExporter(self.reg, feature_names)
         PolyWriter.export(filename)
