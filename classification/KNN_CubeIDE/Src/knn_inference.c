@@ -5,9 +5,6 @@
  *      Author: berkan
  */
 
-#ifndef INC_KNN_INFERENCE_H_
-#define INC_KNN_INFERENCE_H_
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
@@ -69,5 +66,3 @@ int knn_inference(float input[])
 
     return k;
 }
-
-#endif /* INC_KNN_INFERENCE_H_ */

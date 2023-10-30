@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "tree_inference.h"
 
-int tree_inference(int input[])
+int tree_inference(float input[])
 {
     int idx = 0; // Root Node
     while (idx >= 0)
