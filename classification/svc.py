@@ -16,6 +16,7 @@ class SVMClassifier(BaseClassifier):
 
     def inference(self, test_samples, test_labels = None):
         self.result = super().inference(test_samples, test_labels)
+        return self.result
         
     def export(self, filename = 'svc_config'):
         svm_writer = SVMExporter(self.clf)

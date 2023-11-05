@@ -18,19 +18,19 @@ train_samples, test_samples, train_labels, test_labels = train_test_split(sample
 bayesian = BayesClassifier()
 bayesian.train(train_samples, train_labels)
 preds = bayesian.inference(test_samples[0:1])
-bayesian.export()
+#bayesian.export()
 
 dtc = DTClassifier()
 dtc.train(train_samples, train_labels)
 dtc.inference(test_samples)
-dtc.export()
+#dtc.export()
 
 knn = KNNClassifier()
 knn.train(train_samples, train_labels)
 knn.inference(test_samples)
-knn.export()
+#knn.export()
 
 svm = SVMClassifier()
 svm.train(train_samples, train_labels)
 svm.inference(test_samples)
-svm.export()
+#svm.export()
