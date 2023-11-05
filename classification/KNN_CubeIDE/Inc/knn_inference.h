@@ -13,12 +13,6 @@
 #include <math.h>
 #include "knn_config.h"
 
-struct indexedArr
-{
-    float value;
-    int index;
-};
-
 float euclid_distance(float sample[], float target[]);
 int compare(const void *a, const void *b);
 int knn_inference(float input[]);

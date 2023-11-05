@@ -14,7 +14,8 @@ class KNNClassifier(BaseClassifier):
             joblib.dump(self.clf, 'DecisionTree_classifier.joblib') 
 
     def inference(self, test_samples, test_labels = None):
-        self.result = super().inference(test_samples, test_labels)
+        result = super().inference(test_samples, test_labels)
+        return result
         
     def export(self, filename = 'knn_config'):
         TreeWriter = KNNExporter(self.clf)
