@@ -42,8 +42,8 @@ while 1:
         mcuout = py_serial.SERIAL_Read()
         print()
         print("Inputs : " + str(inputs))
-        print("PC Output : " + str(pcout[0]))
-        print("MCU Output : " + str(label_str[int(mcuout)]))
+        print("PC Output : " + str(pcout))
+        print("MCU Output : " + str(mcuout))
         print()
 
         

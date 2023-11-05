@@ -28,8 +28,7 @@ class BayesClassifier(BaseClassifier):
         if save:
             joblib.dump(self, 'bayes_classifier.joblib') 
 
-    def inference(self, x_T, test_labels = None):
-        self.result = super().inference(x_T, test_labels)
+    def inference(self, x_T):
         x = np.transpose(x_T)
         discr = np.zeros(len(self.clf.classes_))
         for lbl in range(len(self.clf.classes_)):

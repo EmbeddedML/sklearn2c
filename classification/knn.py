@@ -13,8 +13,8 @@ class KNNClassifier(BaseClassifier):
         if save:
             joblib.dump(self.clf, 'DecisionTree_classifier.joblib') 
 
-    def inference(self, test_samples, test_labels = None):
-        self.result = super().inference(test_samples, test_labels)
+    def inference(self, test_samples):
+        self.result = super().inference(test_samples)
         return self.result
         
     def export(self, filename = 'knn_config'):
