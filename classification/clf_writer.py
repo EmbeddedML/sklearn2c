@@ -118,7 +118,8 @@ class SVMExporter(GenericExporter):
         super().__init__()
         self.clf = svm_classifier
         self.num_classes = len(self.clf.classes_)
-        self.num_intercept = self.num_classes * (self.num_classes - 1) / 2
+        self.num_intercept = self.num_classes * (self.num_classes - 1) // 2
+        self.w_sum_arr = np.append([0], np.cumsum(self.clf.n_support_))
     
     def create_header(self):
         super().create_header()
@@ -127,9 +128,9 @@ class SVMExporter(GenericExporter):
         self.header_str += f'#define NUM_FEATURES {self.clf.n_features_in_}\n'
         self.header_str += f'#define NUM_SV {np.sum(self.clf.n_support_)}\n'
         self.header_str += 'extern const char *LABELS[NUM_CLASSES];\n'
-        self.header_str += 'extern const float coeffs[NUM_FEATURES][NUM_SV];\n'
+        self.header_str += 'extern const float coeffs[NUM_CLASSES - 1][NUM_SV];\n'
         self.header_str += 'extern const float SV[NUM_SV][NUM_FEATURES];\n'
-        self.header_str += 'extern const float intercepts[NUM_CLASSES];\n'
+        self.header_str += 'extern const float intercepts[NUM_INTERCEPTS];\n'
         self.header_str += 'extern const float w_sum[NUM_CLASSES + 1];\n'
         self.header_str += 'extern const float svm_gamma;\n'
         self.header_str += '#endif'
@@ -137,9 +138,9 @@ class SVMExporter(GenericExporter):
     def create_source(self):
         super().create_source()
         self.source_str += f'const char *LABELS[NUM_CLASSES] = {arr2str(self.clf.classes_)};\n'
-        self.source_str += f'float coeffs[NUM_FEATURES - 1][NUM_SV] = {arr2str(self.clf.dual_coef_)};\n'
-        self.source_str += f'float SV[NUM_SV][NUM_FEATURES] = {arr2str(self.clf.support_vectors_)};\n'
-        self.source_str += f'float intercepts[NUM_INTERCEPTS] = {arr2str(self.clf.intercept_)};\n'
-        self.source_str += f'float w_sum[NUM_CLASSES + 1] = {arr2str(np.cumsum(self.clf.n_support_))};\n'
-        self.source_str += f'float svm_gamma = {self.clf._gamma};\n'
+        self.source_str += f'const float coeffs[NUM_CLASSES - 1][NUM_SV] = {arr2str(self.clf.dual_coef_)};\n'
+        self.source_str += f'const float SV[NUM_SV][NUM_FEATURES] = {arr2str(self.clf.support_vectors_)};\n'
+        self.source_str += f'const float intercepts[NUM_INTERCEPTS] = {arr2str(self.clf.intercept_)};\n'
+        self.source_str += f'const float w_sum[NUM_CLASSES + 1] = {arr2str(self.w_sum_arr)};\n'
+        self.source_str += f'const float svm_gamma = {self.clf._gamma};\n'
 
