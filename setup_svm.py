@@ -10,15 +10,24 @@ MEAN_1 = [2.5, 2.]
 STD_DEV1 = [1, 2]
 MEAN_2 = [1, 2]
 STD_DEV2 = [.5, 1]
+MEAN_3 = [5.5, 3.]
+STD_DEV3 = [1, 2]
+MEAN_4 = [8, 10]
+STD_DEV4 = [.3, 2]
+
 ml_class1 = MLClass("CLASS 1", 100, MEAN_1, STD_DEV1)
 ml_class2 = MLClass("CLASS 2", 100, MEAN_2, STD_DEV2)
+ml_class3 = MLClass("CLASS 3", 100, MEAN_3, STD_DEV3)
+ml_class4 = MLClass("CLASS 4", 100, MEAN_4, STD_DEV4)
+
+#all_classes = [ml_class1, ml_class2,ml_class3, ml_class4]
 all_classes = [ml_class1, ml_class2]
 samples, labels = generate_classes(all_classes)
 train_samples, test_samples, train_labels, test_labels = train_test_split(samples, labels, test_size=0.2, random_state=42)
 
 svm = SVMClassifier()
 svm.train(train_samples, train_labels)
-
+svm.export()
 i = 0
 while 1:
     rqType, datalength, dataType = py_serial.SERIAL_PollForRequest()
