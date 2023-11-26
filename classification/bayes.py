@@ -35,11 +35,11 @@ class BayesClassifier(BaseClassifier):
             mu = np.expand_dims(self.clf.theta_[lbl], 1)
             sigma = self.inv_covs[lbl]
             xt_sigma = np.matmul(x_T, sigma)
-            xt_sigma_x = np.matmul(xt_sigma, x) * (-1/2)
+            xt_sigma_x = -0.5 * np.matmul(xt_sigma, x)
             sigma_mu = np.matmul(sigma, mu)
             sigma_mu_x = np.matmul(np.transpose(sigma_mu), x) 
-            mu_sigma_mu = np.matmul(np.transpose(mu), sigma_mu) * (-1/2)
-            log_det = np.log(self.det_sqrs[lbl]) * (-1/2)
+            mu_sigma_mu = -0.5 * np.matmul(np.transpose(mu), sigma_mu)
+            log_det = -0.5 * np.log(self.det_sqrs[lbl])
             prior = np.log(self.clf.class_prior_[lbl])
             discr[lbl] = xt_sigma_x + sigma_mu_x + mu_sigma_mu + log_det + prior
         return discr

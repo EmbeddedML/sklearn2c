@@ -14,8 +14,8 @@ class DTClassifier(BaseClassifier):
         if save:
             joblib.dump(self.clf, 'DecisionTree_classifier.joblib') 
 
-    def inference(self, test_samples, test_labels = None):
-        result = super().inference(test_samples, test_labels)
+    def inference(self, test_samples):
+        result = super().inference(test_samples)
         return result
         
     def export(self, filename = 'dtc_config'):
