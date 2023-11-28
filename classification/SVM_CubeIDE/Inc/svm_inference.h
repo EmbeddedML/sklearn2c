@@ -14,6 +14,7 @@
 #include "svm_config.h"
 
 float *compute_kernels(float *x);
+float *calculate_ovr_scores(float* confidences);
 int calculate_votes(float *kernels);
 
 #endif /* INC_SVM_INFERENCE_H_ */

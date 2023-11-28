@@ -1,10 +1,3 @@
-/*
- * svm_inference.h
- *
- *  Created on: Jan 22, 2022
- *      Author: berkan
- */
-
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -27,6 +20,23 @@ float *compute_kernels(float *x)
         kernels[sv_idx] = exp(-svm_gamma * kernel);
     }
     return kernels;
+}
+
+float *calculate_ovr_scores(float *confidences){
+        int votes[NUM_CLASSES] = {0};
+        sum_of_conf[NUM_CLASSES] = {0};
+
+        int k = 0
+        for i in range(NUM_CLASSES):
+            for j in range(i + 1, NUM_CLASSES):
+                sum_of_conf[i] += confidences[k]
+                sum_of_confidences[:, j] -= confidences[k]
+                votes[predictions[:, k] == 0, i] += 1
+                votes[predictions[:, k] == 1, j] += 1
+                k += 1
+
+        transformed_confidences = sum_of_confidences / (3 * (abs(sum_of_confidences) + 1));
+        return votes + transformed_confidences
 }
 
 int calculate_votes(float *kernels)
