@@ -108,3 +108,23 @@ class DTRegressorExporter(GenericExporter):
         self.source_str += f"const int SPLIT_FEATURE[NUM_NODES] = {np2str(self.tree.feature)};\n"
         self.source_str += f"const float THRESHOLDS[NUM_NODES] = {np2str(self.tree.threshold)};\n"
         self.source_str += f"const float VALUES[NUM_NODES] = {np2str(self.values)};\n"
+
+
+class KNNExporter(GenericExporter):
+    def __init__(self, regressor) -> None:
+        self.regressor = regressor
+        super().__init__()
+
+    def create_header(self):
+        super().create_header()
+        self.header_str += f'#define NUM_NEIGHBORS {self.regressor.n_neighbors}\n'
+        self.header_str += f'#define NUM_FEATURES {self.regressor.n_features_in_}\n'
+        self.header_str += f'#define NUM_SAMPLES {self.regressor.n_samples_fit_}\n'
+        self.header_str += 'extern const float DATA[NUM_SAMPLES][NUM_FEATURES];\n'
+        self.header_str += 'extern const float DATA_VALUES[NUM_SAMPLES];\n'
+        self.header_str += '#endif'
+
+    def create_source(self):
+        super().create_source()
+        self.source_str += f'const float DATA[NUM_SAMPLES][NUM_FEATURES] = {np2str(self.regressor._fit_X)};\n'
+        self.source_str += f'const float DATA_VALUES[NUM_SAMPLES] = {np2str(self.regressor._y)};\n'

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "knn_inference.h"
+#include "knnReg_inference.h"
 #include <string.h>
 
 float euclid_distance(float sample[], float target[])
@@ -33,7 +33,7 @@ int compare(const void *a, const void *b)
         return 0;
 }
 
-int knn_inference(float *input, int *output)
+int knn_inference(float *input, float *output)
 {
     int k = 0, max = 0;
     struct indexedArr dists[NUM_SAMPLES];
@@ -44,23 +44,10 @@ int knn_inference(float *input, int *output)
     }
 
     qsort(dists, NUM_SAMPLES, sizeof(struct indexedArr), compare);
-
-    int votes[NUM_CLASSES] = {0};
+    float sum = 0;
     for (int i = 0; i < NUM_NEIGHBORS; i++)
-        votes[DATA_LABELS[dists[i].index]]++;
-
-    memcpy(output, votes, NUM_CLASSES * sizeof(int));
+        sum += DATA_VALUES[dists[i].index];
+    
+    *output = sum / NUM_NEIGHBORS;
     return 0;
-
-//
-//    for (int i = 0; i < NUM_CLASSES; ++i)
-//    {
-//        if (votes[i] > max)
-//        {
-//            max = votes[i];
-//            k = i;
-//        }
-//    }
-//    return k;
-
 }
