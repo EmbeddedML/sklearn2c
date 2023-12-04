@@ -23,7 +23,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "svm_inference.h"
+#include "svc_inference.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -94,22 +94,11 @@ int main(void)
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	    float input[NUM_FEATURES] = {3.0f, 2.0f};
-	    float *kernels = compute_kernels(input);
-	    int result = calculate_votes(kernels);
-		if (result == 0){
-			HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14, GPIO_PIN_RESET);
-		}
-		else if (result == 1){
-			HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14, GPIO_PIN_RESET);
-		}
-		else if (result == 2){
-			HAL_GPIO_WritePin(GPIOG, GPIO_PIN_13, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(GPIOG, GPIO_PIN_14, GPIO_PIN_SET);
-		}
-		return 0;
+    float input[NUM_FEATURES] = {4.591975924478789f, 0.17539259732941703f};
+    char label[100];
+    int svc_err = svc_predict(input, label);
+    printf("Predicted Label: %s\n", label);
+    return 0;
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
