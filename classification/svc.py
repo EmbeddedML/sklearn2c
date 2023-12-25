@@ -9,10 +9,8 @@ class SVMClassifier(BaseClassifier):
        self.clf = SVC(**kwargs)
        super().__init__(self.clf)
 
-    def train(self, train_samples, train_labels, save = False):
-        self.clf = super().train(train_samples, train_labels)
-        if save:
-            joblib.dump(self.clf, 'SVM_classifier.joblib') 
+    def train(self, train_samples, train_labels, save_path = None):
+        self.clf = super().train(train_samples, train_labels, save_path)
 
     def inference(self, test_samples, test_labels = None):
         self.result = super().inference(test_samples, test_labels)
