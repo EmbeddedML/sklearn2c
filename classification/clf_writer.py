@@ -35,31 +35,37 @@ class GenericExporter:
         self.source_str += f'#include "{self.filename}.h"\n'
 
 class BayesExporter(GenericExporter):
-    def __init__(self, bayes_classifier, inv_covs, sqrt_dets) -> None:
+    def __init__(self, bayes_classifier) -> None:
         super().__init__()
         self.clf = bayes_classifier
-        self.num_classes = len(self.clf.class_count_)
-        self.sqrt_dets = sqrt_dets
-        self.inv_covs = np.array(inv_covs).reshape(self.num_classes, -1)
+        self.num_classes = len(self.clf.classes)
 
     def create_header(self):
         super().create_header()
         self.header_str += f"#define NUM_CLASSES {self.num_classes}\n"
-        self.header_str += f"#define NUM_FEATURES {self.clf.n_features_in_}\n"
+        self.header_str += f"#define NUM_FEATURES {self.clf.num_features}\n"
         self.header_str += "extern const char *LABELS[NUM_CLASSES];\n"
         self.header_str += "extern float MEANS[NUM_CLASSES][NUM_FEATURES];\n"
-        self.header_str += "extern float INV_COVS[NUM_CLASSES][NUM_FEATURES * NUM_FEATURES];\n"
-        self.header_str += "extern const float DETS[NUM_CLASSES];\n"
         self.header_str += "extern const float CLASS_PRIORS[NUM_CLASSES];\n"
+        if self.clf.case in (1,2):
+            self.header_str += "extern float INV_COV[NUM_FEATURES * NUM_FEATURES];\n"
+        else:
+            self.header_str += "extern float INV_COVS[NUM_CLASSES][NUM_FEATURES * NUM_FEATURES];\n"
+            self.header_str += "extern const float DETS[NUM_CLASSES];\n"
         self.header_str += '#endif\n'
     
     def create_source(self):
         super().create_source()
-        self.source_str += f'const char *LABELS[NUM_CLASSES] = {arr2str(self.clf.classes_)};\n'
-        self.source_str += f'float MEANS[NUM_CLASSES][NUM_FEATURES] = {arr2str(self.clf.theta_)};\n'
-        self.source_str += f'float INV_COVS[NUM_CLASSES][NUM_FEATURES * NUM_FEATURES] = {arr2str(self.inv_covs)};\n'
-        self.source_str += f'const float DETS[NUM_CLASSES] = {arr2str(self.sqrt_dets)};\n'
-        self.source_str += f'const float CLASS_PRIORS[NUM_CLASSES] = {arr2str(self.clf.class_prior_)};\n'
+        self.source_str += f'const char *LABELS[NUM_CLASSES] = {arr2str(self.clf.classes)};\n'
+        self.source_str += f'float MEANS[NUM_CLASSES][NUM_FEATURES] = {arr2str(self.clf.means)};\n'
+        self.source_str += f'const float CLASS_PRIORS[NUM_CLASSES] = {arr2str(self.clf.priors)};\n'
+        if self.clf.case == 1:
+            self.source_str += f'const float INV_COV[NUM_FEATURES * NUM_FEATURES] = {arr2str(np.eye(self.clf.num_features) * self.clf.sigma_sq)};\n'
+        elif self.clf.case == 2:
+            self.source_str += f'float INV_COVS[NUM_FEATURES * NUM_FEATURES] = {arr2str(self.clf.inv_cov)};\n'
+        elif self.clf.case == 3: 
+            self.source_str += f'float INV_COVS[NUM_CLASSES][NUM_FEATURES * NUM_FEATURES] = {arr2str(self.clf.inv_covs)};\n'
+            self.source_str += f'const float DETS[NUM_CLASSES] = {arr2str(self.clf.det_sqrs)};\n'
     
 class DTClassifierExporter(GenericExporter):
     def __init__(self, dt_classifier) -> None:

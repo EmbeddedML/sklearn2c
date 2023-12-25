@@ -15,9 +15,11 @@ all_classes = [ml_class1, ml_class2]
 samples, labels = generate_classes(all_classes)
 train_samples, test_samples, train_labels, test_labels = train_test_split(samples, labels, test_size=0.2, random_state=42)
 
-bayesian = BayesClassifier(case = 1)
+bayesian = BayesClassifier(case = 3)
+bayesian2 = BayesClassifier(case = 3)
 bayesian.train(train_samples, train_labels, save_path='bayes_classifier.joblib')
 preds = bayesian.inference(test_samples[0:1])
+bayesian2.load("bayes_classifier.joblib")
 bayesian.export()
 
 dtc = DTClassifier()
