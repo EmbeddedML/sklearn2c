@@ -6,16 +6,14 @@ from .base_regressor import BaseRegressor
 from .reg_writer import PolynomialRegExporter
 
 class PolynomialRegressor(BaseRegressor):
-    def __init__(self, deg, **kwargs):
+    def __init__(self, deg = 2, **kwargs):
        self.poly_features = PolynomialFeatures(degree = deg, **kwargs)
        self.reg = LinearRegression(**kwargs)
        super().__init__(self.reg)
 
-    def train(self, train_samples, train_labels, save = False):
+    def train(self, train_samples, train_labels, save_path = None):
         train_samples = self.poly_features.fit_transform(train_samples)
-        self.reg = super().train(train_samples, train_labels)
-        if save:
-            joblib.dump(self, 'poly_regression.joblib') 
+        self.reg = super().train(train_samples, train_labels, save_path)
 
     def inference(self, test_samples, test_labels = None):
         test_samples = self.poly_features.fit_transform(test_samples)

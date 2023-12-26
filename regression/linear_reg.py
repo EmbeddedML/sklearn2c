@@ -9,10 +9,8 @@ class LinearRegressor(BaseRegressor):
        self.reg = LinearRegression(**kwargs)
        super().__init__(self.reg)
 
-    def train(self, train_samples, train_labels, save = False):
-        self.reg = super().train(train_samples, train_labels)
-        if save:
-            joblib.dump(self, 'linear_regression.joblib') 
+    def train(self, train_samples, train_labels, save_path = None):
+        self.reg = super().train(train_samples, train_labels, save_path)
 
     def inference(self, test_samples, test_labels = None):
         result = super().inference(test_samples, test_labels)

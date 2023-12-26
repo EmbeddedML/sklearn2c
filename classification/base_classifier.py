@@ -9,11 +9,10 @@ class BaseClassifier:
         self.clf = self.clf.fit(train_samples, train_labels, **kwargs)
         if save_path:
             joblib.dump(self.clf, save_path)
-        return self.clf
 
     def load(self, filename):
-        with open(filename, "rb") as pkl_file:
-            self.clf = joblib.load(pkl_file)
+        with open(filename, "rb") as joblib_file:
+            self.clf = joblib.load(joblib_file)
 
     def inference(self, test_samples, probs=True):
         if probs:
