@@ -10,7 +10,7 @@ class DTClassifier(BaseClassifier):
        super().__init__(self.clf)
 
     def train(self, train_samples, train_labels, save_path):
-        self.clf = super().train(train_samples, train_labels, save_path)
+        super().train(train_samples, train_labels, save_path)
 
     def inference(self, test_samples):
         result = super().inference(test_samples)
