@@ -1,8 +1,8 @@
-from regression.linear_reg import LinearRegressor
-from regression.polynomial_reg import PolynomialRegressor
-from regression.dtr import DTRegressor
-from regression.knn import KNNRegressor
-from regression.reg_data_generator import generate_regression_data
+from regressors.linear_reg import LinearRegressor
+from regressors.polynomial_reg import PolynomialRegressor
+from regressors.dtr import DTRegressor
+from regressors.knn import KNNRegressor
+from regressors.reg_data_generator import generate_regression_data
 
 train_samples, train_labels, coeff1 = generate_regression_data(100, 20, 0, rs= 9)
 

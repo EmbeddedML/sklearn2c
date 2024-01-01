@@ -1,12 +1,15 @@
-from regressors.polynomial_reg import PolynomialRegressor
-from regressors.reg_data_generator import generate_regression_data
+from regressors.linear_reg import LinearRegressor
+import numpy as np
 import py_serial
 
 py_serial.SERIAL_Init("COM3")
 
-train_samples, train_labels, coeff1 = generate_regression_data(100, 20, 0, rs= 9)
-poly = PolynomialRegressor(deg = 3)
-poly.train(train_samples, train_labels)
+train_samples = np.load('regression_data/reg_train_samples')
+train_labels = np.load('regression_data/reg_train_labels')
+
+linear = LinearRegressor()
+linear.load("regression_models/linear_reg.joblib")
+
 i = 0
 while 1:
     rqType, datalength, dataType = py_serial.SERIAL_PollForRequest()
@@ -24,7 +27,7 @@ while 1:
         py_serial.SERIAL_Write(inputs)
 
 
-    pcout = poly.inference(inputs)
+    pcout = linear.inference(np.reshape(inputs, (1, datalength)))
     rqType, datalength, dataType = py_serial.SERIAL_PollForRequest()
     if rqType == py_serial.MCU_WRITES:
         mcuout = py_serial.SERIAL_Read()

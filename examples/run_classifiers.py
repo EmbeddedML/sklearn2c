@@ -1,8 +1,8 @@
-from classification.data_generator import generate_classes, MLClass
-from classification.bayes import BayesClassifier
-from classification.knn import KNNClassifier
-from classification.dtc import DTClassifier
-from classification.svc import SVMClassifier
+from classifiers.data_generator import generate_classes, MLClass
+from classifiers.bayes import BayesClassifier
+from classifiers.knn import KNNClassifier
+from classifiers.dtc import DTClassifier
+from classifiers.svc import SVMClassifier
 from sklearn.model_selection import train_test_split
 
 MEAN_1 = [2.5, 2.]
