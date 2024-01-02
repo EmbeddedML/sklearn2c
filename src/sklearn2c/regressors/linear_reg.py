@@ -1,4 +1,3 @@
-import joblib
 from sklearn.linear_model import LinearRegression
 
 from .base_regressor import BaseRegressor

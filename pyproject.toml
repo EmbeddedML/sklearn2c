@@ -1,0 +1,26 @@
+[project]
+name = "sklearn2c"
+version = "0.0.1"
+description = "A simple tool to embed scikit-learn models into microcontrollers"
+readme = "README.md"
+license = {file = "LICENSE"}
+maintainers = [{name = "EmbeddedML", email = "dev@embeddedml.com"}]
+
+requires-python = ">=3.6"
+dependencies = [
+    "scikit-learn",
+    "numpy"
+]
+
+[project.urls]
+Homepage = "https://github.com/EmbeddedML/sklearn2c"
+"Issue Tracker" = "https://github.com/EmbeddedML/sklearn2c/issues/"
+
+[project.scripts]
+sklearn2c = "sklearn2c:main"
+
+[build-system]
+# These are the assumed default build requirements from pip:
+# https://pip.pypa.io/en/stable/reference/pip/#pep-517-and-518-support
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"

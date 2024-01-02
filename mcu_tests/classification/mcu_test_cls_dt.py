@@ -1,4 +1,4 @@
-from classifiers.dtc import DTClassifier
+from sklearn2c import DTClassifier
 import py_serial 
 import numpy as np
 

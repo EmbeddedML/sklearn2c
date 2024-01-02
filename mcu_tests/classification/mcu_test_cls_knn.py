@@ -1,4 +1,4 @@
-from classifiers.knn import KNNClassifier
+from sklearn2c import KNNClassifier
 import py_serial 
 import numpy as np
 

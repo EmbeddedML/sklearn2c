@@ -1,8 +1,5 @@
-from classifiers.data_generator import generate_classes, MLClass
-from classifiers.bayes import BayesClassifier
-from classifiers.knn import KNNClassifier
-from classifiers.dtc import DTClassifier
-from classifiers.svc import SVMClassifier
+import numpy as np
+from sklearn2c import BayesClassifier, KNNClassifier, DTClassifier, SVMClassifier
 from sklearn.model_selection import train_test_split
 
 MEAN_1 = [2.5, 2.]
@@ -22,23 +19,23 @@ preds = bayesian.inference(test_samples[0:1])
 bayesian2.load("bayes_classifier.joblib")
 bayesian.export()
 
-# dtc = DTClassifier()
-# dtc2 = DTClassifier()
-# dtc.train(train_samples, train_labels, save_path= 'DTC_classifier.joblib')
-# dtc.inference(test_samples)
-# dtc2.load('DTC_classifier.joblib')
-# dtc.export()
+dtc = DTClassifier()
+dtc2 = DTClassifier()
+dtc.train(train_samples, train_labels, save_path= 'DTC_classifier.joblib')
+dtc.inference(test_samples)
+dtc2.load('DTC_classifier.joblib')
+dtc.export()
 
-# knn = KNNClassifier()
-# knn2 = KNNClassifier()
-# knn.train(train_samples, train_labels, save_path= 'KNN_classifier.joblib')
-# knn.inference(test_samples)
-# knn2.load('KNN_classifier.joblib')
-# knn.export()
+knn = KNNClassifier()
+knn2 = KNNClassifier()
+knn.train(train_samples, train_labels, save_path= 'KNN_classifier.joblib')
+knn.inference(test_samples)
+knn2.load('KNN_classifier.joblib')
+knn.export()
 
-# svm = SVMClassifier()
-# svm2 = SVMClassifier()
-# svm.train(train_samples, train_labels, save_path= 'SVM_classifier.joblib')
-# svm.inference(test_samples)
-# svm2.load('SVM_classifier.joblib')
-# svm2.export()
+svm = SVMClassifier()
+svm2 = SVMClassifier()
+svm.train(train_samples, train_labels, save_path= 'SVM_classifier.joblib')
+svm.inference(test_samples)
+svm2.load('SVM_classifier.joblib')
+svm2.export()

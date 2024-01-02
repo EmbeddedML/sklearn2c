@@ -1,4 +1,4 @@
-from classifiers.svc import SVMClassifier
+from sklearn2c import SVMClassifier
 import py_serial 
 import numpy as np
 

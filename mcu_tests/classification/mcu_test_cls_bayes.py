@@ -1,4 +1,4 @@
-from classifiers.bayes import BayesClassifier
+from sklearn2c import BayesClassifier
 import py_serial 
 import numpy as np
 
