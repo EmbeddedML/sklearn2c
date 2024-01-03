@@ -1,30 +1,31 @@
-from regressors.polynomial_reg import PolynomialRegressor
-from regressors.reg_data_generator import generate_regression_data
-import py_serial
+from sklearn2c import BayesClassifier
+import py_serial 
+import numpy as np
 
 py_serial.SERIAL_Init("COM3")
 
-train_samples, train_labels, coeff1 = generate_regression_data(100, 20, 0, rs= 9)
-poly = PolynomialRegressor(deg = 3)
-poly.train(train_samples, train_labels)
+test_samples = np.load('classification_data/cls_test_samples.npy')
+test_labels = np.load('classification_data/cls_test_labels.npy')
+
+bayesian = BayesClassifier(case = 3)
+bayesian.load("classification_models/bayes_classifier.joblib")
+
 i = 0
 while 1:
     rqType, datalength, dataType = py_serial.SERIAL_PollForRequest()
-    
     if rqType == py_serial.MCU_WRITES:
         # INPUT -> FROM MCU TO PC
         inputs = py_serial.SERIAL_Read()
     
     elif rqType == py_serial.MCU_READS:
         # INPUT -> FROM PC TO MCU
-        inputs = train_samples[i:i+1].astype(py_serial.SERIAL_GetDType(dataType))
+        inputs = test_samples[i:i+1].astype(py_serial.SERIAL_GetDType(dataType))
         i = i + 1
-        if i >= len(train_samples):
+        if i >= len(test_samples):
             i = 0
         py_serial.SERIAL_Write(inputs)
-
-
-    pcout = poly.inference(inputs)
+    
+    pcout = bayesian.inference(np.reshape(inputs, (1, datalength)))
     rqType, datalength, dataType = py_serial.SERIAL_PollForRequest()
     if rqType == py_serial.MCU_WRITES:
         mcuout = py_serial.SERIAL_Read()
@@ -34,5 +35,4 @@ while 1:
         print("MCU Output : " + str(mcuout))
         print()
 
-
-
+        

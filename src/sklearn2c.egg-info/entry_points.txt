@@ -1,0 +1,2 @@
+[console_scripts]
+sklearn2c = sklearn2c:main

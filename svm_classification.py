@@ -1,6 +1,6 @@
 import numpy as np
 from sklearn.model_selection import train_test_split
-from classification.svc import SVMClassifier
+from classifiers.svc import SVMClassifier
 
 def Gaussian2D(mean,E,theta,len):
 	c, s = np.cos(theta), np.sin(theta)
