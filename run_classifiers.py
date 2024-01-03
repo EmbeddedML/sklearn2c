@@ -1,7 +1,5 @@
 import os.path as osp
-from classification import (
-    generate_classes,
-    MLClass,
+from sklearn2c.classifiers import (
     BayesClassifier,
     KNNClassifier,
     DTClassifier,

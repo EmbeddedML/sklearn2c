@@ -1,5 +1,5 @@
+import os.path as osp
 import numpy as np
-
 
 def arr2str(arr):
     if type(arr) in (list, tuple):
@@ -17,9 +17,11 @@ class GenericExporter:
         self.header_str = ""
         self.source_str = ""
         self.filename = ""
+        self.config_name = ""
 
     def export(self, filename):
         self.filename = filename
+        self.config_name = osp.basename(self.filename)
         self.create_header()
         self.create_source()
         with open(f'{filename}.h', "w") as header_file:
@@ -28,11 +30,11 @@ class GenericExporter:
             source_file.write(self.source_str)
 
     def create_header(self):
-        self.header_str += f'#ifndef {self.filename.upper()}_H_INCLUDED\n'
-        self.header_str += f'#define {self.filename.upper()}_H_INCLUDED\n'
+        self.header_str += f'#ifndef {self.config_name.upper()}_H_INCLUDED\n'
+        self.header_str += f'#define {self.config_name.upper()}_H_INCLUDED\n'
     
     def create_source(self):
-        self.source_str += f'#include "{self.filename}.h"\n'
+        self.source_str += f'#include "{self.config_name}.h"\n'
 
 class BayesExporter(GenericExporter):
     def __init__(self, bayes_classifier) -> None:

@@ -1,13 +1,12 @@
 import os.path as osp
-from regression import (
+from sklearn2c.regressors import (
     LinearRegressor,
     PolynomialRegressor,
     DTRegressor,
-    KNNRegressor,
-    generate_regression_data,
-)
+    KNNRegressor)
 
 train_samples, train_labels, coeff1 = generate_regression_data(100, 20, 0, rs=9)
+
 MODELS_DIR = osp.join("models", "regression")
 CONFIG_DIR = osp.join("configs", "regression")
 

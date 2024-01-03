@@ -1,3 +1,4 @@
+import os.path as osp
 import numpy as np
 
 def np2str(arr):
@@ -32,9 +33,11 @@ class GenericExporter:
         self.header_str = ""
         self.source_str = ""
         self.filename = ""
+        self.config_name = ""
 
     def export(self, filename):
         self.filename = filename
+        self.config_name = osp.basename(self.filename)
         self.create_header()
         self.create_source()
         with open(f'{filename}.h', "w") as header_file:
@@ -43,25 +46,25 @@ class GenericExporter:
             source_file.write(self.source_str)
 
     def create_header(self):
-        self.header_str += f'#ifndef {self.filename.upper()}_H_INCLUDED\n'
-        self.header_str += f'#define {self.filename.upper()}_H_INCLUDED\n'
+        self.header_str += f'#ifndef {self.config_name.upper()}_H_INCLUDED\n'
+        self.header_str += f'#define {self.config_name.upper()}_H_INCLUDED\n'
     
     def create_source(self):
-        self.source_str += f'#include "{self.filename}.h"\n'
+        self.source_str += f'#include "{self.config_name}.h"\n'
 
 class PolynomialRegExporter(GenericExporter):
     def __init__(self, regressor, feature_names = None) -> None:
         super().__init__()
         self.regressor = regressor
         coef_start = 0
-        self.offset = self.regressor.intercept_ if self.regressor.intercept_ else 0
+        self.offset = self.regressor.intercept_.item() if self.regressor.intercept_ else 0
         if feature_names is not None:
             coef_start = 1
             self.feature_names = feature_names[1:]
         else:
             self.feature_names = None
         
-        self.coeff_str = np2str(self.regressor.coef_[coef_start:])
+        self.coeff_str = np2str(self.regressor.coef_[0, coef_start:])
 
     def create_header(self):
         super().create_header()
