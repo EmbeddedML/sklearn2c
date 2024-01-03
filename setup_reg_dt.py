@@ -1,5 +1,5 @@
-from regression.dtr import DTRegressor
-from regression.reg_data_generator import generate_regression_data
+from regressors.dtr import DTRegressor
+from regressors.reg_data_generator import generate_regression_data
 import py_serial
 
 py_serial.SERIAL_Init("COM3")

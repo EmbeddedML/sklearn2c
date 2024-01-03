@@ -1,5 +1,5 @@
-from regression.linear_reg import LinearRegressor
-from regression.reg_data_generator import generate_regression_data
+from regressors.linear_reg import LinearRegressor
+from regressors.reg_data_generator import generate_regression_data
 import numpy as np
 import py_serial
 

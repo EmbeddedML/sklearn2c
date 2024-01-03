@@ -16,7 +16,7 @@ extern "C"
 #include "arm_math.h"
 #include <bayes_conf.h>
 
-int8_t BAYES_Classify(arm_matrix_instance_f32 * input, arm_matrix_instance_f32 * output);
+int8_t BAYES_Classify(arm_matrix_instance_f32 * input, int case, arm_matrix_instance_f32 * output);
 
 
 #ifdef __cplusplus
