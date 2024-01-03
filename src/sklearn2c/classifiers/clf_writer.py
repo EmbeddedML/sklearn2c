@@ -43,7 +43,7 @@ class BayesExporter(GenericExporter):
         super().create_header()
         self.header_str += f"#define NUM_CLASSES {self.num_classes}\n"
         self.header_str += f"#define NUM_FEATURES {self.clf.num_features}\n"
-        self.header_str += f"#define CASE {self.clf.case}"
+        self.header_str += f"#define CASE {self.clf.case}\n"
         self.header_str += "extern const char *LABELS[NUM_CLASSES];\n"
         self.header_str += "extern float MEANS[NUM_CLASSES][NUM_FEATURES];\n"
         self.header_str += "extern const float CLASS_PRIORS[NUM_CLASSES];\n"
