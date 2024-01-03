@@ -2,4 +2,4 @@
 __pycache__
 **/book_figs/
 build/
-*.egg-info/
+src/*.egg-info
