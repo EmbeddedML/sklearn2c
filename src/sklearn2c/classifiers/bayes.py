@@ -3,11 +3,9 @@ from math import sqrt
 
 import numpy as np
 from sklearn.covariance import empirical_covariance
-
-from .base_classifier import BaseClassifier
 from .clf_writer import BayesExporter
 
-class BayesClassifier(BaseClassifier):
+class BayesClassifier():
     def __init__(self, case = 3):
         if case not in (1,2,3): 
             raise ValueError("case must be either 1,2 or 3")
@@ -42,7 +40,11 @@ class BayesClassifier(BaseClassifier):
         if save_path:
             joblib.dump(self, save_path)
 
-
+    def load(self, filename):
+        with open(filename, "rb") as joblib_file:
+            saved_model = joblib.load(joblib_file)
+        self.__dict__.update(saved_model.__dict__)
+        
     def inference(self, X):
         num_classes = len(self.classes)
         probs = np.zeros(num_classes)
