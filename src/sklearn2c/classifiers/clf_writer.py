@@ -133,7 +133,6 @@ class SVMExporter(GenericExporter):
         self.header_str += f'#define NUM_INTERCEPTS {self.num_intercept}\n'
         self.header_str += f'#define NUM_FEATURES {self.clf.n_features_in_}\n'
         self.header_str += f'#define NUM_SV {np.sum(self.clf.n_support_)}\n'
-        self.header_str += 'extern const char *LABELS[NUM_CLASSES];\n'
         self.header_str += 'extern const float coeffs[NUM_CLASSES - 1][NUM_SV];\n'
         self.header_str += 'extern const float SV[NUM_SV][NUM_FEATURES];\n'
         self.header_str += 'extern const float intercepts[NUM_INTERCEPTS];\n'
@@ -143,7 +142,6 @@ class SVMExporter(GenericExporter):
     
     def create_source(self):
         super().create_source()
-        self.source_str += f'const char *LABELS[NUM_CLASSES] = {arr2str(self.clf.classes_)};\n'
         self.source_str += f'const float coeffs[NUM_CLASSES - 1][NUM_SV] = {arr2str(self.clf.dual_coef_)};\n'
         self.source_str += f'const float SV[NUM_SV][NUM_FEATURES] = {arr2str(self.clf.support_vectors_)};\n'
         self.source_str += f'const float intercepts[NUM_INTERCEPTS] = {arr2str(self.clf.intercept_)};\n'
