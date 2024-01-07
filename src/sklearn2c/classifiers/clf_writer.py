@@ -65,7 +65,7 @@ class BayesExporter(GenericExporter):
             self.source_str += f'const float INV_COV[NUM_FEATURES][NUM_FEATURES] = {arr2str(self.clf.inv_cov)};\n'
         elif self.clf.case == 3: 
             self.source_str += f'const float INV_COVS[NUM_CLASSES][NUM_FEATURES][NUM_FEATURES] = {arr2str(self.clf.inv_covs)};\n'
-            self.source_str += f'const float DETS[NUM_CLASSES] = {arr2str(self.clf.det_sqrs)};\n'
+            self.source_str += f'const float DETS[NUM_CLASSES] = {arr2str(self.clf.dets)};\n'
     
 class DTClassifierExporter(GenericExporter):
     def __init__(self, dt_classifier) -> None:
