@@ -44,29 +44,27 @@ class BayesExporter(GenericExporter):
         self.header_str += f"#define NUM_CLASSES {self.num_classes}\n"
         self.header_str += f"#define NUM_FEATURES {self.clf.num_features}\n"
         self.header_str += f"#define CASE {self.clf.case}\n"
-        self.header_str += "extern const char *LABELS[NUM_CLASSES];\n"
         self.header_str += "extern float MEANS[NUM_CLASSES][NUM_FEATURES];\n"
         self.header_str += "extern const float CLASS_PRIORS[NUM_CLASSES];\n"
         if self.clf.case == 1:
-            self.header_str += "extern float sigma_sq;\n"
+            self.header_str += "extern const float sigma_sq;\n"
         elif self.clf.case ==  2:
-            self.header_str += "extern float INV_COV[NUM_FEATURES * NUM_FEATURES];\n"
+            self.header_str += "extern const float INV_COV[NUM_FEATURES][NUM_FEATURES];\n"
         else:
-            self.header_str += "extern float INV_COVS[NUM_CLASSES][NUM_FEATURES * NUM_FEATURES];\n"
+            self.header_str += "extern const float INV_COVS[NUM_CLASSES][NUM_FEATURES][NUM_FEATURES];\n"
             self.header_str += "extern const float DETS[NUM_CLASSES];\n"
         self.header_str += '#endif\n'
     
     def create_source(self):
         super().create_source()
-        self.source_str += f'const char *LABELS[NUM_CLASSES] = {arr2str(self.clf.classes)};\n'
         self.source_str += f'float MEANS[NUM_CLASSES][NUM_FEATURES] = {arr2str(self.clf.means)};\n'
         self.source_str += f'const float CLASS_PRIORS[NUM_CLASSES] = {arr2str(self.clf.priors)};\n'
         if self.clf.case == 1:
             self.source_str += f'const float sigma_sq = {self.clf.sigma_sq};\n'
         elif self.clf.case == 2:
-            self.source_str += f'float INV_COVS[NUM_FEATURES * NUM_FEATURES] = {arr2str(self.clf.inv_cov)};\n'
+            self.source_str += f'const float INV_COV[NUM_FEATURES][NUM_FEATURES] = {arr2str(self.clf.inv_cov)};\n'
         elif self.clf.case == 3: 
-            self.source_str += f'float INV_COVS[NUM_CLASSES][NUM_FEATURES * NUM_FEATURES] = {arr2str(self.clf.inv_covs)};\n'
+            self.source_str += f'const float INV_COVS[NUM_CLASSES][NUM_FEATURES][NUM_FEATURES] = {arr2str(self.clf.inv_covs)};\n'
             self.source_str += f'const float DETS[NUM_CLASSES] = {arr2str(self.clf.det_sqrs)};\n'
     
 class DTClassifierExporter(GenericExporter):

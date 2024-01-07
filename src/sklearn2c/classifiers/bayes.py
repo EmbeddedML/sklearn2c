@@ -16,7 +16,7 @@ class BayesClassifier():
         self.priors = None
         self.means = []
         self.inv_covs = []
-        self.det_sqrs = []
+        self.dets = []
 
     def train(self, train_samples, train_labels, save_path):
         # list of dict for inverse covariance matrix and determinant
@@ -34,9 +34,9 @@ class BayesClassifier():
             if self.case == 3:
                 cov_matrix = empirical_covariance(train_samples[train_labels == label])
                 inv_cov = np.linalg.inv(cov_matrix)
-                sqrt_det = sqrt(np.linalg.det(inv_cov))
+                det = np.linalg.det(cov_matrix)
                 self.inv_covs.append(inv_cov)
-                self.det_sqrs.append(sqrt_det)
+                self.dets.append(det)
         if save_path:
             joblib.dump(self, save_path)
 
@@ -57,13 +57,13 @@ class BayesClassifier():
                 prod = zero_mean @ np.transpose(zero_mean)
                 probs[label] = np.log(p) - prod / (2 * self.sigma_sq)
             elif self.case == 2:
-                prod = zero_mean @ self.inv_cov @np.transpose(zero_mean)
+                prod = zero_mean @ self.inv_cov @ np.transpose(zero_mean)
                 probs[label] = np.log(p) - prod * 0.5
             elif self.case == 3:
                 inv_cov_i = self.inv_covs[label]
                 W_i = -0.5 * inv_cov_i
                 w_i = inv_cov_i @ mu_i
-                w_i0 = -0.5 * mu_i @ inv_cov_i @ mu_i - 0.5 * self.det_sqrs[label] + np.log(p)
+                w_i0 = -0.5 * mu_i @ inv_cov_i @ mu_i - 0.5 * np.log(self.dets[label]) + np.log(p)
                 first_term = X @ W_i @ X.T
                 second_term = X @ w_i
                 probs[label] = first_term + second_term + w_i0
