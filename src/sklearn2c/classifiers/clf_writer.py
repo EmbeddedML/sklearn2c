@@ -2,6 +2,7 @@ import os.path as osp
 import numpy as np
 
 def arr2str(arr):
+    np.set_printoptions(threshold=np.inf)
     if type(arr) in (list, tuple):
         arr = np.array(arr)
     str_arr = np.array2string(arr, separator= ",")
@@ -137,6 +138,8 @@ class SVMExporter(GenericExporter):
         self.header_str += 'extern const float SV[NUM_SV][NUM_FEATURES];\n'
         self.header_str += 'extern const float intercepts[NUM_INTERCEPTS];\n'
         self.header_str += 'extern const float w_sum[NUM_CLASSES + 1];\n'
+        self.header_str += 'extern const float probA[NUM_INTERCEPTS];\n'
+        self.header_str += 'extern const float probB[NUM_INTERCEPTS];\n'
         self.header_str += 'extern const float svm_gamma;\n'
         self.header_str += '#endif'
     
@@ -146,5 +149,7 @@ class SVMExporter(GenericExporter):
         self.source_str += f'const float SV[NUM_SV][NUM_FEATURES] = {arr2str(self.clf.support_vectors_)};\n'
         self.source_str += f'const float intercepts[NUM_INTERCEPTS] = {arr2str(self.clf.intercept_)};\n'
         self.source_str += f'const float w_sum[NUM_CLASSES + 1] = {arr2str(self.w_sum_arr)};\n'
+        self.source_str += f'const float probA[NUM_INTERCEPTS] = {arr2str(self.clf.probA_)};\n'
+        self.source_str += f'const float probB[NUM_INTERCEPTS] = {arr2str(self.clf.probB_)};\n'
         self.source_str += f'const float svm_gamma = {self.clf._gamma};\n'
 
