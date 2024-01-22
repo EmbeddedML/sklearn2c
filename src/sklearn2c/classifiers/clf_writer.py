@@ -134,13 +134,15 @@ class SVMExporter(GenericExporter):
         self.header_str += f'#define NUM_INTERCEPTS {self.num_intercept}\n'
         self.header_str += f'#define NUM_FEATURES {self.clf.n_features_in_}\n'
         self.header_str += f'#define NUM_SV {np.sum(self.clf.n_support_)}\n'
+        self.header_str += 'enum KernelType{\n\tLINEAR,\n\tPOLY,\n\tRBF\n};\n'
         self.header_str += 'extern const float coeffs[NUM_CLASSES - 1][NUM_SV];\n'
         self.header_str += 'extern const float SV[NUM_SV][NUM_FEATURES];\n'
         self.header_str += 'extern const float intercepts[NUM_INTERCEPTS];\n'
         self.header_str += 'extern const float w_sum[NUM_CLASSES + 1];\n'
-        self.header_str += 'extern const float probA[NUM_INTERCEPTS];\n'
-        self.header_str += 'extern const float probB[NUM_INTERCEPTS];\n'
         self.header_str += 'extern const float svm_gamma;\n'
+        self.header_str += 'extern const float coef0;\n'
+        self.header_str += 'extern const int degree;\n'
+        self.header_str += 'extern const enum KernelType type;\n'
         self.header_str += '#endif'
     
     def create_source(self):
@@ -149,7 +151,8 @@ class SVMExporter(GenericExporter):
         self.source_str += f'const float SV[NUM_SV][NUM_FEATURES] = {arr2str(self.clf.support_vectors_)};\n'
         self.source_str += f'const float intercepts[NUM_INTERCEPTS] = {arr2str(self.clf.intercept_)};\n'
         self.source_str += f'const float w_sum[NUM_CLASSES + 1] = {arr2str(self.w_sum_arr)};\n'
-        self.source_str += f'const float probA[NUM_INTERCEPTS] = {arr2str(self.clf.probA_)};\n'
-        self.source_str += f'const float probB[NUM_INTERCEPTS] = {arr2str(self.clf.probB_)};\n'
         self.source_str += f'const float svm_gamma = {self.clf._gamma};\n'
+        self.source_str += f'const float coef0 = {self.clf.coef0};\n'
+        self.source_str += f'const int degree = {self.clf.degree};\n'
+        self.source_str += f'const enum KernelType type = {(self.clf.kernel).upper()};\n'
 

@@ -6,14 +6,14 @@ from .clf_writer import SVMExporter
 
 class SVMClassifier(BaseClassifier):
     def __init__(self, **kwargs):
-       self.clf = SVC(probability=True, **kwargs)
+       self.clf = SVC(**kwargs)
        super().__init__(self.clf)
 
     def train(self, train_samples, train_labels, save_path = None):
         super().train(train_samples, train_labels, save_path)
 
     def inference(self, test_samples):
-        self.result = super().inference(test_samples)
+        self.result = super().inference(test_samples, probs=False)
         return self.result
         
     def export(self, filename = 'svc_config'):

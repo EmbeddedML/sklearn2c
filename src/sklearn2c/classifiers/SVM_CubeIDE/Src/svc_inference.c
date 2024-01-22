@@ -1,10 +1,38 @@
 #include <math.h>
-#include "svc_config.h"
+#include "SVM_config.h"
 #include "svc_inference.h"
 
-float kernels[NUM_SV] = {0};
+static float kernels[NUM_SV] = {0};
+static void linear_kernel_func(float *x)
+{
+    memset(kernels, 0, sizeof(kernels));
+    for (int sv_idx = 0; sv_idx < NUM_SV; sv_idx++)
+    {
+        float kernel = 0.0;
+        for (int feature_idx = 0; feature_idx < NUM_FEATURES; feature_idx++)
+        {
+            kernel += x[feature_idx] * SV[sv_idx][feature_idx];
+        }
+        kernels[sv_idx] = kernel;
+    }
+}
 
-float *compute_kernels(float *x)
+static void poly_kernel_func(float *x)
+{
+    memset(kernels, 0, sizeof(kernels));
+    for (int sv_idx = 0; sv_idx < NUM_SV; sv_idx++)
+    {
+        float kernel = 0.0;
+        for (int feature_idx = 0; feature_idx < NUM_FEATURES; feature_idx++)
+        {
+            kernel += x[feature_idx] * SV[sv_idx][feature_idx];
+        }
+        kernels[sv_idx] = pow(svm_gamma * kernel + coef0, degree);
+    }
+}
+
+
+static void rbf_kernel_func(float *x)
 {
     memset(kernels, 0, sizeof(kernels));
     for (int sv_idx = 0; sv_idx < NUM_SV; sv_idx++)
@@ -16,13 +44,12 @@ float *compute_kernels(float *x)
         }
         kernels[sv_idx] = exp(-svm_gamma * kernel);
     }
-    return kernels;
 }
 
-int calculate_ovo_scores(float *kernels, float *ovo_confs)
+static void calculate_ovo_scores(float *kernels, float *ovo_confs)
 {
     int idx = 0;
-    ovo_confs = memcpy(ovo_confs, intercepts, sizeof(float) * NUM_INTERCEPTS);
+    memcpy(ovo_confs, intercepts, sizeof(float) * NUM_INTERCEPTS);
     for (int m = 0; m < NUM_CLASSES - 1; m++)
     {
         for (int n = m + 1; n < NUM_CLASSES; n++)
@@ -35,11 +62,9 @@ int calculate_ovo_scores(float *kernels, float *ovo_confs)
             idx++;
         }
     }
-
-    return 0;
 }
 
-int calculate_ovr_scores(float ovo_confs[NUM_INTERCEPTS], float ovr_confs[NUM_CLASSES]){
+static void calculate_ovr_scores(float ovo_confs[NUM_INTERCEPTS], float ovr_confs[NUM_CLASSES]){
     int votes[NUM_CLASSES] = {0};
     float sum_of_confs[NUM_CLASSES] = {0};
 
@@ -62,6 +87,7 @@ int findMax(float array[], int *max_idx) {
 
     for (int i = 1; i < NUM_CLASSES; ++i) {
         if (array[i] > max_val) {
+            max_val = array[i];
             *max_idx = i;
         }
     }
@@ -70,14 +96,27 @@ int findMax(float array[], int *max_idx) {
 }
 
 
-int svc_predict(float* input, char* output_label){
-    float *kernels = compute_kernels(input);
+int svc_predict(float* input, int* label){
+    if(type == LINEAR)
+        linear_kernel_func(input);
+    else if(type == POLY)
+        poly_kernel_func(input);
+    else if(type == RBF)
+        rbf_kernel_func(input);
+        
     float ovo_scores[NUM_INTERCEPTS];
     float ovr_scores[NUM_CLASSES];
-    int max_idx;
-    int ovo_err = calculate_ovo_scores(kernels, ovo_scores);
-    int ovr_err = calculate_ovr_scores(ovo_scores, ovr_scores);
-    findMax(ovr_scores, &max_idx);
-    strcpy(output_label, LABELS[max_idx]);
+    calculate_ovo_scores(kernels, ovo_scores);
+    
+    if(NUM_CLASSES == 2){
+        for(int i = 0; i < NUM_INTERCEPTS; i++)
+            printf("Class Probs[%d]: %f\n", i, ovo_scores[i]);
+        *label = ovo_scores[0] > 0 ? 1 : 0;
+        return 0;
+    }
+    calculate_ovr_scores(ovo_scores, ovr_scores);
+    for(int i = 0; i < NUM_CLASSES; i++)
+        printf("Class Probs[%d]: %f\n", i, ovr_scores[i]);
+    findMax(ovr_scores, label);
     return 0;
 }
