@@ -10,10 +10,11 @@ class BaseRegressor:
         if save_path:
             joblib.dump(self, save_path)
     
-    def load(self, filename):
+    @staticmethod
+    def load(filename):
         with open(filename, "rb") as joblib_file:
             saved_model = joblib.load(joblib_file)
-        self.__dict__.update(saved_model.__dict__)
+        return saved_model
 
     def inference(self, test_samples, test_labels=None):
         if test_labels is None:

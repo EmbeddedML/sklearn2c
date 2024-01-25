@@ -18,7 +18,7 @@ class BayesClassifier():
         self.inv_covs = []
         self.dets = []
 
-    def train(self, train_samples, train_labels, save_path):
+    def train(self, train_samples, train_labels, save_path = None):
         # list of dict for inverse covariance matrix and determinant
         self.classes, counts = np.unique(train_labels, return_counts=True)
         self.priors = counts / np.sum(counts)
@@ -40,14 +40,16 @@ class BayesClassifier():
         if save_path:
             joblib.dump(self, save_path)
 
-    def load(self, filename):
+    @staticmethod
+    def load(filename):
         with open(filename, "rb") as joblib_file:
             saved_model = joblib.load(joblib_file)
-        self.__dict__.update(saved_model.__dict__)
+        return saved_model
         
     def inference(self, X):
+        len_samples = len(X)
         num_classes = len(self.classes)
-        probs = np.zeros(num_classes)
+        probs = np.zeros((len_samples, num_classes))
 
         for label in range(num_classes):
             mu_i = self.means[label]
@@ -55,10 +57,10 @@ class BayesClassifier():
             zero_mean = X - mu_i
             if self.case == 1: 
                 prod = zero_mean @ np.transpose(zero_mean)
-                probs[label] = np.log(p) - prod / (2 * self.sigma_sq)
+                probs[:, label] = np.diag(np.log(p) - prod / (2 * self.sigma_sq))
             elif self.case == 2:
                 prod = zero_mean @ self.inv_cov @ np.transpose(zero_mean)
-                probs[label] = np.log(p) - prod * 0.5
+                probs[: , label] = np.diag(np.log(p) - prod * 0.5)
             elif self.case == 3:
                 inv_cov_i = self.inv_covs[label]
                 W_i = -0.5 * inv_cov_i
@@ -66,7 +68,7 @@ class BayesClassifier():
                 w_i0 = -0.5 * mu_i @ inv_cov_i @ mu_i - 0.5 * np.log(self.dets[label]) + np.log(p)
                 first_term = X @ W_i @ X.T
                 second_term = X @ w_i
-                probs[label] = first_term + second_term + w_i0
+                probs[:, label] = np.diag(first_term + second_term + w_i0)
         
         return probs
         

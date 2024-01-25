@@ -1,6 +1,5 @@
 import joblib
 
-
 class BaseClassifier:
     def __init__(self, classifier) -> None:
         self.clf = classifier
@@ -8,13 +7,15 @@ class BaseClassifier:
     def train(self, train_samples, train_labels, save_path, **kwargs):
         self.clf = self.clf.fit(train_samples, train_labels, **kwargs)
         if save_path:
-            joblib.dump(self.clf, save_path)
+            joblib.dump(self, save_path)
 
-    def load(self, filename):
+    @staticmethod
+    def load(filename:str):
         with open(filename, "rb") as joblib_file:
-            self.clf = joblib.load(joblib_file)
+            model = joblib.load(joblib_file)
+        return model
 
-    def inference(self, test_samples, probs=True):
+    def inference(self, test_samples, probs = False):
         if probs:
             return self.clf.predict_proba(test_samples)
         else:

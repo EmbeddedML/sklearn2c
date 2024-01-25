@@ -9,7 +9,7 @@ class DTClassifier(BaseClassifier):
        self.clf = DecisionTreeClassifier(**kwargs)
        super().__init__(self.clf)
 
-    def train(self, train_samples, train_labels, save_path):
+    def train(self, train_samples, train_labels, save_path = None):
         super().train(train_samples, train_labels, save_path)
 
     def inference(self, test_samples):
