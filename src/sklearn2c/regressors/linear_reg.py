@@ -11,9 +11,16 @@ class LinearRegressor(BaseRegressor):
     def train(self, train_samples, train_labels, save_path = None):
         self.reg = super().train(train_samples, train_labels, save_path)
 
-    def inference(self, test_samples, test_labels = None):
-        result = super().inference(test_samples, test_labels)
+    def predict(self, test_samples):
+        result = super().predict(test_samples)
         return result
+    
+    @staticmethod
+    def load(filename:str) -> "LinearRegressor":
+        model = BaseRegressor.load(filename)
+        if not isinstance(model, LinearRegressor):
+            raise TypeError(f"Expected an object of type LinearRegressor, but got {type(model)} instead.")
+        return model
 
     def export(self, filename = 'linReg_config'):
         LinearRegWriter = PolynomialRegExporter(self.reg)

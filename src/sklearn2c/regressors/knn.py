@@ -1,4 +1,3 @@
-import joblib
 from sklearn.neighbors import KNeighborsRegressor
 
 from .base_regressor import BaseRegressor
@@ -12,9 +11,16 @@ class KNNRegressor(BaseRegressor):
     def train(self, train_samples, train_labels, save_path = None):
         self.reg = super().train(train_samples, train_labels, save_path)
 
-    def inference(self, test_samples, test_labels = None):
-        result = super().inference(test_samples, test_labels)
+    def predict(self, test_samples):
+        result = super().predict(test_samples)
         return result
+
+    @staticmethod
+    def load(filename:str) -> "KNNRegressor":
+        model = BaseRegressor.load(filename)
+        if not isinstance(model, KNNRegressor):
+            raise TypeError(f"Expected an object of type KNNRegressor, but got {type(model)} instead.")
+        return model
 
     def export(self, filename = 'knnReg_config'):
         KNNRegWriter = KNNExporter(self.reg)

@@ -1,8 +1,4 @@
-import joblib
-
-import numpy as np
 from sklearn.tree import DecisionTreeRegressor
-
 from .base_regressor import BaseRegressor
 from .reg_writer import DTRegressorExporter
 
@@ -14,9 +10,16 @@ class DTRegressor(BaseRegressor):
     def train(self, train_samples, train_labels, save_path = None):
         self.reg = super().train(train_samples, train_labels, save_path)
 
-    def inference(self, test_samples, test_labels = None):
-        result = super().inference(test_samples, test_labels)
+    def predict(self, test_samples):
+        result = super().predict(test_samples)
         return result
+    
+    @staticmethod
+    def load(filename:str) -> "DTRegressor":
+        model = BaseRegressor.load(filename)
+        if not isinstance(model, DTRegressor):
+            raise TypeError(f"Expected an object of type DTRegressor, but got {type(model)} instead.")
+        return model
         
     def export(self, filename = 'dtr_config'):
         TreeWriter = DTRegressorExporter(self.reg)

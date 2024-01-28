@@ -16,8 +16,5 @@ class BaseRegressor:
             saved_model = joblib.load(joblib_file)
         return saved_model
 
-    def inference(self, test_samples, test_labels=None):
-        if test_labels is None:
-            return self.reg.predict(test_samples)
-        else:
-            return self.reg.score(test_samples, test_labels)
+    def predict(self, test_samples):
+        return self.reg.predict(test_samples)
