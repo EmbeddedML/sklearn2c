@@ -21,7 +21,12 @@ sklearn2c is a tool that converts scikit-learn library classification algorithms
 - DBSCAN
 
 ## Installation
+You can install the library via pip either using:
 `pip install sklearn2c`
+or
+`pip install git+git@github.com:EmbeddedML/sklearn2c.git`
+Alternatively, you can install conda package:
+`conda install sklearn2c` or `mamba install sklearn2c`
 ## Usage
 
 ## Contributing
