@@ -1,4 +1,3 @@
-import joblib
 from sklearn.svm import SVC
 
 from .base_classifier import BaseClassifier
@@ -12,9 +11,16 @@ class SVMClassifier(BaseClassifier):
     def train(self, train_samples, train_labels, save_path = None):
         super().train(train_samples, train_labels, save_path)
 
-    def inference(self, test_samples):
-        self.result = super().inference(test_samples, probs=False)
+    def predict(self, test_samples):
+        self.result = super().predict(test_samples, probs=False)
         return self.result
+
+    @staticmethod
+    def load(filename:str) -> "SVMClassifier":
+        model = BaseClassifier.load(filename)
+        if not isinstance(model, SVMClassifier):
+            raise TypeError(f"Expected an object of type SVMClassifier, but got {type(model)} instead.")
+        return model
         
     def export(self, filename = 'svc_config'):
         svm_writer = SVMExporter(self.clf)

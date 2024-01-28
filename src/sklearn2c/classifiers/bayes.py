@@ -1,5 +1,4 @@
 import joblib
-from math import sqrt
 
 import numpy as np
 from sklearn.covariance import empirical_covariance
@@ -39,14 +38,16 @@ class BayesClassifier():
                 self.dets.append(det)
         if save_path:
             joblib.dump(self, save_path)
-
+   
     @staticmethod
-    def load(filename):
+    def load(filename:str) -> "BayesClassifier":
         with open(filename, "rb") as joblib_file:
-            saved_model = joblib.load(joblib_file)
-        return saved_model
+            model = joblib.load(joblib_file)
+        if not isinstance(model, BayesClassifier):
+            raise TypeError(f"Expected an object of type BayesClassifier, but got {type(model)} instead.")
+        return model
         
-    def inference(self, X):
+    def predict(self, X):
         len_samples = len(X)
         num_classes = len(self.classes)
         probs = np.zeros((len_samples, num_classes))
