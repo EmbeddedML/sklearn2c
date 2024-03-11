@@ -14,6 +14,11 @@ class SVMClassifier(BaseClassifier):
     def predict(self, test_samples):
         self.result = super().predict(test_samples, probs=False)
         return self.result
+    
+    def score(self, test_samples):
+        return self.clf.decision_function(test_samples)
+ 
+    
 
     @staticmethod
     def load(filename:str) -> "SVMClassifier":

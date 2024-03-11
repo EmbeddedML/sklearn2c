@@ -15,7 +15,7 @@ class BaseClassifier:
             model = joblib.load(joblib_file)
         return model
 
-    def predict(self, test_samples, probs = False):
+    def predict(self, test_samples, probs = True):
         if probs:
             return self.clf.predict_proba(test_samples)
         else:

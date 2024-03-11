@@ -10,6 +10,7 @@ class PolynomialRegressor(BaseRegressor):
        super().__init__(self.reg)
 
     def train(self, train_samples, train_labels, save_path = None):
+        self.num_inputs = train_samples.shape[1]
         train_samples = self.poly_features.fit_transform(train_samples)
         self.reg = super().train(train_samples, train_labels, save_path)
 
@@ -27,5 +28,5 @@ class PolynomialRegressor(BaseRegressor):
 
     def export(self, filename = 'polyReg_config'):
         feature_names = self.poly_features.get_feature_names_out()
-        PolyWriter = PolynomialRegExporter(self.reg, feature_names)
+        PolyWriter = PolynomialRegExporter(self.reg, self.num_inputs, feature_names)
         PolyWriter.export(filename)
