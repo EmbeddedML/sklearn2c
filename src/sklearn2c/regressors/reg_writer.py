@@ -53,7 +53,7 @@ class GenericExporter:
         self.source_str += f'#include "{self.config_name}.h"\n'
 
 class PolynomialRegExporter(GenericExporter):
-    def __init__(self, regressor,  num_inputs, feature_names = None) -> None:
+    def __init__(self, regressor,  num_inputs = None, feature_names = None) -> None:
         super().__init__()
         self.num_inputs = num_inputs
         self.regressor = regressor
@@ -74,7 +74,8 @@ class PolynomialRegExporter(GenericExporter):
             num_features = self.regressor.n_features_in_ - 1
 
         self.header_str += f"#define NUM_FEATURES {num_features}\n"
-        self.header_str += f"#define NUM_INPUTS {self.num_inputs}\n"
+        if self.num_inputs:
+            self.header_str += f"#define NUM_INPUTS {self.num_inputs}\n"
         self.header_str += "extern const float COEFFS[NUM_FEATURES];\n"
         self.header_str += "extern const float OFFSET;\n"
         if self.feature_names is not None:
