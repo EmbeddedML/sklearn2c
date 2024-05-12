@@ -24,8 +24,7 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include <stdio.h>
-#include "Matrix.h"
-#include "bayes_inference.h"
+#include "dbscan_inference.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -90,7 +89,18 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
-  
+  float inp1[2] = {-7.59807141, -7.09355674}; // 1
+  float inp2[2] = {-3.10983631,  8.72259238}; // 0
+  float inp3[2] = {4.19336388, 2.82956848}; // 2
+  float inp4[2] = {5.15492652, 5.82590117}; // -1
+  int result1 = dbscan_predict(inp1);
+  printf("Result 1: %d\n", result1);
+  int result2 = dbscan_predict(inp2);
+  printf("Result 2: %d\n", result2);
+  int result3 = dbscan_predict(inp3);
+  printf("Result 3: %d\n", result3);
+  int result4 = dbscan_predict(inp4);
+  printf("Result 4: %d\n", result4);
   /* USER CODE END 2 */
 
   /* Infinite loop */
