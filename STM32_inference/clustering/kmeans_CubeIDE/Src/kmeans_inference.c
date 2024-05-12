@@ -10,10 +10,10 @@ float euclid_distance(float sample[], float target[])
         float diff = sample[i] - target[i];
         dist += diff * diff;
     }
-    return dist;
+    return sqrt(dist);
 }
 
-int run_kmeans_clustering(float input[], bool online)
+int kmeans_predict(float input[], bool online)
 {
     float min_distance = FLT_MAX;
     int cluster_idx = -1;

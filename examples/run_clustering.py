@@ -12,7 +12,7 @@ train_samples, test_samples = train_test_split(
 MODELS_DIR = osp.join("models", "clustering")
 CONFIG_DIR = osp.join("configs", "clustering")
 
-kmeans = Kmeans()
+kmeans = Kmeans(random_state = 42)
 kmeans_model_dir = osp.join(MODELS_DIR, "kmeans_clustering.joblib")
 kmeans_config_dir = osp.join(CONFIG_DIR, "kmeans_clus_config")
 kmeans.train(train_samples, save_path=kmeans_model_dir)
