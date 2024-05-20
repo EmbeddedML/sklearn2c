@@ -1,38 +1,5 @@
-import os.path as osp
 import numpy as np
-
-def arr2str(arr):
-    np.set_printoptions(threshold=np.inf)
-    if type(arr) in (list, tuple):
-        arr = np.array(arr)
-    str_arr = np.array2string(arr, separator= ",")
-    str_arr = str_arr.replace("[", "{").replace("]","}")
-    str_arr = str_arr.replace("'","\"")
-    return str_arr
-
-class GenericExporter:
-    def __init__(self) -> None:
-        self.header_str = ""
-        self.source_str = ""
-        self.filename = ""
-        self.config_name = ""
-
-    def export(self, filename):
-        self.filename = filename
-        self.config_name = osp.basename(self.filename)
-        self.create_header()
-        self.create_source()
-        with open(f'{filename}.h', "w") as header_file:
-            header_file.write(self.header_str)
-        with open(f'{filename}.c', "w") as source_file:
-            source_file.write(self.source_str)
-
-    def create_header(self):
-        self.header_str += f'#ifndef {self.config_name.upper()}_H_INCLUDED\n'
-        self.header_str += f'#define {self.config_name.upper()}_H_INCLUDED\n'
-    
-    def create_source(self):
-        self.source_str += f'#include "{self.config_name}.h"\n'
+from ..generic_exporter import GenericExporter, np2str
 
 class BayesExporter(GenericExporter):
     def __init__(self, bayes_classifier) -> None:
@@ -58,15 +25,15 @@ class BayesExporter(GenericExporter):
     
     def create_source(self):
         super().create_source()
-        self.source_str += f'float MEANS[NUM_CLASSES][NUM_FEATURES] = {arr2str(self.clf.means)};\n'
-        self.source_str += f'const float CLASS_PRIORS[NUM_CLASSES] = {arr2str(self.clf.priors)};\n'
+        self.source_str += f'float MEANS[NUM_CLASSES][NUM_FEATURES] = {np2str(self.clf.means)};\n'
+        self.source_str += f'const float CLASS_PRIORS[NUM_CLASSES] = {np2str(self.clf.priors)};\n'
         if self.clf.case == 1:
             self.source_str += f'const float sigma_sq = {self.clf.sigma_sq};\n'
         elif self.clf.case == 2:
-            self.source_str += f'const float INV_COV[NUM_FEATURES][NUM_FEATURES] = {arr2str(self.clf.inv_cov)};\n'
+            self.source_str += f'const float INV_COV[NUM_FEATURES][NUM_FEATURES] = {np2str(self.clf.inv_cov)};\n'
         elif self.clf.case == 3: 
-            self.source_str += f'const float INV_COVS[NUM_CLASSES][NUM_FEATURES][NUM_FEATURES] = {arr2str(self.clf.inv_covs)};\n'
-            self.source_str += f'const float DETS[NUM_CLASSES] = {arr2str(self.clf.dets)};\n'
+            self.source_str += f'const float INV_COVS[NUM_CLASSES][NUM_FEATURES][NUM_FEATURES] = {np2str(self.clf.inv_covs)};\n'
+            self.source_str += f'const float DETS[NUM_CLASSES] = {np2str(self.clf.dets)};\n'
     
 class DTClassifierExporter(GenericExporter):
     def __init__(self, dt_classifier) -> None:
@@ -89,11 +56,11 @@ class DTClassifierExporter(GenericExporter):
 
     def create_source(self):
         super().create_source()
-        self.source_str += f"const int LEFT_CHILDREN[NUM_NODES] = {arr2str(self.tree.children_left)};\n"
-        self.source_str += f"const int RIGHT_CHILDREN[NUM_NODES] = {arr2str(self.tree.children_right)} ;\n"
-        self.source_str += f"const int SPLIT_FEATURE[NUM_NODES] = {arr2str(self.tree.feature)};\n"
-        self.source_str += f"const float THRESHOLDS[NUM_NODES] = {arr2str(self.tree.threshold)};\n"
-        self.source_str += f"const int VALUES[NUM_NODES][NUM_CLASSES] = {arr2str(self.values)};\n"
+        self.source_str += f"const int LEFT_CHILDREN[NUM_NODES] = {np2str(self.tree.children_left)};\n"
+        self.source_str += f"const int RIGHT_CHILDREN[NUM_NODES] = {np2str(self.tree.children_right)} ;\n"
+        self.source_str += f"const int SPLIT_FEATURE[NUM_NODES] = {np2str(self.tree.feature)};\n"
+        self.source_str += f"const float THRESHOLDS[NUM_NODES] = {np2str(self.tree.threshold)};\n"
+        self.source_str += f"const int VALUES[NUM_NODES][NUM_CLASSES] = {np2str(self.values)};\n"
     
 
 class KNNExporter(GenericExporter):
@@ -115,9 +82,9 @@ class KNNExporter(GenericExporter):
 
     def create_source(self):
         super().create_source()
-        self.source_str += f'char* LABELS[NUM_CLASSES] = {arr2str(self.clf.classes_)};\n'
-        self.source_str += f'const float DATA[NUM_SAMPLES][NUM_FEATURES] = {arr2str(self.clf._fit_X)};\n'
-        self.source_str += f'const int DATA_LABELS[NUM_SAMPLES] = {arr2str(self.clf._y)};\n'
+        self.source_str += f'char* labels[NUM_CLASSES] = {np2str(self.clf.classes_)};\n'
+        self.source_str += f'const float data[NUM_SAMPLES][NUM_FEATURES] = {np2str(self.clf._fit_X)};\n'
+        self.source_str += f'const int DATA_LABELS[NUM_SAMPLES] = {np2str(self.clf._y)};\n'
     
 
 class SVMExporter(GenericExporter):
@@ -147,10 +114,10 @@ class SVMExporter(GenericExporter):
     
     def create_source(self):
         super().create_source()
-        self.source_str += f'const float coeffs[NUM_CLASSES - 1][NUM_SV] = {arr2str(self.clf.dual_coef_)};\n'
-        self.source_str += f'const float SV[NUM_SV][NUM_FEATURES] = {arr2str(self.clf.support_vectors_)};\n'
-        self.source_str += f'const float intercepts[NUM_INTERCEPTS] = {arr2str(self.clf.intercept_)};\n'
-        self.source_str += f'const float w_sum[NUM_CLASSES + 1] = {arr2str(self.w_sum_arr)};\n'
+        self.source_str += f'const float coeffs[NUM_CLASSES - 1][NUM_SV] = {np2str(self.clf.dual_coef_)};\n'
+        self.source_str += f'const float SV[NUM_SV][NUM_FEATURES] = {np2str(self.clf.support_vectors_)};\n'
+        self.source_str += f'const float intercepts[NUM_INTERCEPTS] = {np2str(self.clf.intercept_)};\n'
+        self.source_str += f'const float w_sum[NUM_CLASSES + 1] = {np2str(self.w_sum_arr)};\n'
         self.source_str += f'const float svm_gamma = {self.clf._gamma};\n'
         self.source_str += f'const float coef0 = {self.clf.coef0};\n'
         self.source_str += f'const int degree = {self.clf.degree};\n'

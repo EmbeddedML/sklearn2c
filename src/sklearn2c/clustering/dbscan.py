@@ -2,8 +2,7 @@ import joblib
 import numpy as np
 from sklearn.metrics import pairwise_distances_argmin_min
 from sklearn.cluster import DBSCAN
-from .clus_writer import DBSCANExporter
-
+from .clus_exporter import DBSCANExporter
 
 class Dbscan:
     def __init__(self, **kwargs) -> None:

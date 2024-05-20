@@ -2,7 +2,7 @@ import joblib
 from sklearn.tree import DecisionTreeClassifier
 
 from .base_classifier import BaseClassifier
-from .clf_writer import DTClassifierExporter
+from .clf_exporter import DTClassifierExporter
 
 class DTClassifier(BaseClassifier):
     def __init__(self, **kwargs):

@@ -1,7 +1,7 @@
 from sklearn.svm import SVC
 
 from .base_classifier import BaseClassifier
-from .clf_writer import SVMExporter
+from .clf_exporter import SVMExporter
 
 class SVMClassifier(BaseClassifier):
     def __init__(self, **kwargs):

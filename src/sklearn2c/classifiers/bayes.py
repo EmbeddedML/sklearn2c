@@ -2,7 +2,7 @@ import joblib
 
 import numpy as np
 from sklearn.covariance import empirical_covariance
-from .clf_writer import BayesExporter
+from .clf_exporter import BayesExporter
 
 class BayesClassifier():
     def __init__(self, case = 3):

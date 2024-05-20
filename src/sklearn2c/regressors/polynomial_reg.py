@@ -1,7 +1,7 @@
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 from .base_regressor import BaseRegressor
-from .reg_writer import PolynomialRegExporter
+from .reg_exporter import PolynomialRegExporter
 
 class PolynomialRegressor(BaseRegressor):
     def __init__(self, deg = 2, **kwargs):

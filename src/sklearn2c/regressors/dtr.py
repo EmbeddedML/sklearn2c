@@ -1,6 +1,6 @@
 from sklearn.tree import DecisionTreeRegressor
 from .base_regressor import BaseRegressor
-from .reg_writer import DTRegressorExporter
+from .reg_exporter import DTRegressorExporter
 
 class DTRegressor(BaseRegressor):
     def __init__(self, **kwargs):

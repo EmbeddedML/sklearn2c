@@ -1,7 +1,6 @@
 import joblib
 from sklearn.cluster import KMeans
-from .clus_writer import kMeansExporter
-
+from .clus_exporter import kMeansExporter
 
 class Kmeans:
     def __init__(self, **kwargs) -> None:

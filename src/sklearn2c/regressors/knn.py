@@ -1,7 +1,7 @@
 from sklearn.neighbors import KNeighborsRegressor
 
 from .base_regressor import BaseRegressor
-from .reg_writer import KNNExporter
+from .reg_exporter import KNNExporter
 
 class KNNRegressor(BaseRegressor):
     def __init__(self, **kwargs):

@@ -1,6 +1,6 @@
 from sklearn.neighbors import KNeighborsClassifier
 from .base_classifier import BaseClassifier
-from .clf_writer import KNNExporter
+from .clf_exporter import KNNExporter
 
 class KNNClassifier(BaseClassifier):
     def __init__(self, **kwargs):

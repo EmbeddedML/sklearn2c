@@ -1,14 +1,5 @@
-import os.path as osp
 import numpy as np
-
-def np2str(arr):
-    str_arr = np.array2string(arr, separator= ",")
-    str_arr = str_arr.replace("[", "{").replace("]","}")
-    str_arr = str_arr.replace("'","\"")
-    # str_arr = str_arr.replace("\n", ", ")
-    # str_arr = str_arr.replace("  ", ", ")
-    # str_arr = str_arr.replace(" ", ", ")
-    return str_arr
+from ..generic_exporter import GenericExporter, np2str
 
 def feats2str(arr):
     new_arr = np.array([""] * len(arr), dtype=object)
@@ -27,31 +18,6 @@ def feats2str(arr):
     str_arr = str_arr.replace("'","\"")
     return str_arr
 
-
-class GenericExporter:
-    def __init__(self) -> None:
-        self.header_str = ""
-        self.source_str = ""
-        self.filename = ""
-        self.config_name = ""
-
-    def export(self, filename):
-        self.filename = filename
-        self.config_name = osp.basename(self.filename)
-        self.create_header()
-        self.create_source()
-        with open(f'{filename}.h', "w") as header_file:
-            header_file.write(self.header_str)
-        with open(f'{filename}.c', "w") as source_file:
-            source_file.write(self.source_str)
-
-    def create_header(self):
-        self.header_str += f'#ifndef {self.config_name.upper()}_H_INCLUDED\n'
-        self.header_str += f'#define {self.config_name.upper()}_H_INCLUDED\n'
-    
-    def create_source(self):
-        self.source_str += f'#include "{self.config_name}.h"\n'
-
 class PolynomialRegExporter(GenericExporter):
     def __init__(self, regressor,  num_inputs = None, feature_names = None) -> None:
         super().__init__()
@@ -65,7 +31,7 @@ class PolynomialRegExporter(GenericExporter):
         else:
             self.feature_names = None
         
-        self.coeff_str = np2str(self.regressor.coef_[0, coef_start:])
+        self.coeff_str = np2str(self.regressor.coef_[coef_start:])
 
     def create_header(self):
         super().create_header()
