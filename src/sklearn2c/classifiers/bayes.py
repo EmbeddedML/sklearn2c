@@ -57,11 +57,11 @@ class BayesClassifier():
             p = self.priors[label]
             zero_mean = X - mu_i
             if self.case == 1: 
-                prod = zero_mean @ np.transpose(zero_mean)
-                probs[:, label] = np.diag(np.log(p) - prod / (2 * self.sigma_sq))
+                prod = np.einsum('ij,ij->i', zero_mean, zero_mean)
+                probs[:, label] = np.log(p) - prod / (2 * self.sigma_sq)
             elif self.case == 2:
-                prod = zero_mean @ self.inv_cov @ np.transpose(zero_mean)
-                probs[: , label] = np.diag(np.log(p) - prod * 0.5)
+                prod = np.einsum('ij,ij->i', zero_mean @ self.inv_cov, zero_mean)
+                probs[: , label] = np.log(p) - prod * 0.5
             elif self.case == 3:
                 inv_cov_i = self.inv_covs[label]
                 W_i = -0.5 * inv_cov_i
