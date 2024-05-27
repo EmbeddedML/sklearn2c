@@ -12,7 +12,7 @@ class PolynomialRegressor(BaseRegressor):
     def train(self, train_samples, train_labels, save_path = None):
         self.num_inputs = train_samples.shape[1]
         train_samples = self.poly_features.fit_transform(train_samples)
-        self.reg = super().train(train_samples, train_labels, save_path)
+        super().train(train_samples, train_labels, save_path)
 
     def predict(self, test_samples):
         test_samples = self.poly_features.fit_transform(test_samples)

@@ -9,7 +9,7 @@ class KNNRegressor(BaseRegressor):
        super().__init__(self.reg)
 
     def train(self, train_samples, train_labels, save_path = None):
-        self.reg = super().train(train_samples, train_labels, save_path)
+        super().train(train_samples, train_labels, save_path)
 
     def predict(self, test_samples):
         result = super().predict(test_samples)
