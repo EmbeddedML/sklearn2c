@@ -67,9 +67,9 @@ class BayesClassifier():
                 W_i = -0.5 * inv_cov_i
                 w_i = inv_cov_i @ mu_i
                 w_i0 = -0.5 * mu_i @ inv_cov_i @ mu_i - 0.5 * np.log(self.dets[label]) + np.log(p)
-                first_term = X @ W_i @ X.T
+                first_term = np.einsum('ij,ij->i', X @ W_i, X)
                 second_term = X @ w_i
-                probs[:, label] = np.diag(first_term + second_term + w_i0)
+                probs[:, label] = first_term + second_term + w_i0
         
         return probs
         
