@@ -3,3 +3,4 @@ __pycache__
 **/book_figs/
 build/
 src/*.egg-info
+dist/

@@ -4,12 +4,19 @@ version = "0.0.1"
 description = "A simple tool to embed scikit-learn models into microcontrollers"
 readme = "README.md"
 license = {file = "LICENSE"}
-maintainers = [{name = "EmbeddedML", email = "dev@embeddedml.com"}]
+maintainers = [{name = "EmbeddedML", email = "berkanh@gmail.com"}]
+keywords = ["embedded", "machine learning", "scikit-learn"]
 
 requires-python = ">=3.6"
 dependencies = [
     "scikit-learn",
     "numpy"
+]
+
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
 ]
 
 [project.urls]
