@@ -19,6 +19,8 @@ class BayesClassifier():
 
     def train(self, train_samples, train_labels, save_path = None):
         # list of dict for inverse covariance matrix and determinant
+        train_samples = np.array(train_samples)
+        train_labels = np.array(train_labels)
         self.classes, counts = np.unique(train_labels, return_counts=True)
         self.priors = counts / np.sum(counts)
         self.num_features = train_samples.shape[1]
