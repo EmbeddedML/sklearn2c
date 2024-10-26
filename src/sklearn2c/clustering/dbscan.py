@@ -32,6 +32,6 @@ class Dbscan:
             )
         return model
 
-    def export(self, filename="kmeans_clus_config"):
-        kMeansWriter = DBSCANExporter(self.clus)
-        kMeansWriter.export(filename)
+    def export(self, filename="dbscan_clus_config"):
+        dbscanWriter = DBSCANExporter(self.clus)
+        dbscanWriter.export(filename)

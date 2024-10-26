@@ -1,11 +1,6 @@
 import numpy as np
 from ..generic_exporter import GenericExporter, np2str
 
-def np2str(arr):
-    str_arr = np.array2string(arr, separator= ",")
-    str_arr = str_arr.replace("[", "{").replace("]","}")
-    return str_arr
-
 class kMeansExporter(GenericExporter):
     def __init__(self, clus) -> None:
         self.clus = clus
