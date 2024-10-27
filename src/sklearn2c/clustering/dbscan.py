@@ -1,5 +1,6 @@
 import joblib
 import numpy as np
+import pandas as pd
 from sklearn.metrics import pairwise_distances_argmin_min
 from sklearn.cluster import DBSCAN
 from .clus_exporter import DBSCANExporter
@@ -7,8 +8,13 @@ from .clus_exporter import DBSCANExporter
 class Dbscan:
     def __init__(self, **kwargs) -> None:
         self.clus = DBSCAN(**kwargs)
+        self.means = None
+        self.stds = None
 
-    def train(self, train_samples, save_path=None):
+    def train(self, train_samples : np.ndarray | pd.DataFrame, save_path=None):
+        self.means = np.array(train_samples.mean(axis = 0))
+        self.stds = np.array(train_samples.std(axis = 0))
+        train_samples = (train_samples - self.means) / self.stds
         self.clus.fit(train_samples, save_path)
         self.clus.labels_= self.clus.labels_[self.clus.core_sample_indices_]
         if save_path:
@@ -33,5 +39,5 @@ class Dbscan:
         return model
 
     def export(self, filename="dbscan_clus_config"):
-        dbscanWriter = DBSCANExporter(self.clus)
+        dbscanWriter = DBSCANExporter(self.clus, self.means, self.stds)
         dbscanWriter.export(filename)

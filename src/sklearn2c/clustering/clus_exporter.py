@@ -24,8 +24,10 @@ class kMeansExporter(GenericExporter):
         self.source_str += f"const float centroids[NUM_CLUSTERS][NUM_FEATURES] = {np2str(self.centroids)};"
 
 class DBSCANExporter(GenericExporter):
-    def __init__(self, clus) -> None:
+    def __init__(self, clus, means, stds) -> None:
         self.clus = clus
+        self.means = means
+        self.stds = stds
         super().__init__()
         self.core_points = self.clus.components_
         self.num_core_points, self.num_features = self.core_points.shape
@@ -40,10 +42,14 @@ class DBSCANExporter(GenericExporter):
         self.header_str += f"#define NUM_CLUSTERS {self.num_clusters}\n"
         self.header_str += f"#define EPS {self.eps}\n"
         self.header_str += "extern const float CORE_POINTS[NUM_CORE_POINTS][NUM_FEATURES];\n"
-        self.header_str += "extern const int labels[NUM_CORE_POINTS];\n"
+        self.header_str += "extern const int LABELS[NUM_CORE_POINTS];\n"
+        self.header_str += "extern const int MEANS[NUM_FEATURES];\n"
+        self.header_str += "extern const int STDDEV[NUM_FEATURES];\n"
         self.header_str += "#endif"
     
     def create_source(self):
         super().create_source()
-        self.source_str += f"const float core_points[NUM_CORE_POINTS][NUM_FEATURES] = {np2str(self.core_points)};\n"
-        self.source_str += f"const int labels[NUM_CORE_POINTS] = {np2str(self.labels)};\n"
+        self.source_str += f"const float CORE_POINTS[NUM_CORE_POINTS][NUM_FEATURES] = {np2str(self.core_points)};\n"
+        self.source_str += f"const int LABELS[NUM_CORE_POINTS] = {np2str(self.labels)};\n"
+        self.source_str += f"const int MEANS[NUM_FEATURES] = {np2str(self.means)};\n"
+        self.source_str += f"const int STDDEV[NUM_FEATURES] = {np2str(self.stds)};\n"
